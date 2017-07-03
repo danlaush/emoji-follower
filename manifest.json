@@ -11,7 +11,8 @@
   },
   "browser_action": {
     "default_title": "Emoji Follower",
-    "default_icon": "icon--off.png"
+    "default_icon": "icon--off.png",
+    "default_popup": "popup.html"
   },
   "permissions": [
     "https://*/*",

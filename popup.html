@@ -6,7 +6,7 @@
  -->
 <html>
   <head>
-    <title>Getting Started Extension's Popup</title>
+    <title>Emoji Follower Settings</title>
     <style>
       body {
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
@@ -30,8 +30,14 @@
     <script src="popup.js"></script>
   </head>
   <body>
-    <div id="status"></div>
-    <img id="image-result" hidden>
+    <label for="emojiOn">
+      Turn emoji on
+      <input id="emojiOn" type="checkbox" />
+    </label>
+    <label for="emojiList">
+      Emoji to use
+      <input id="emojiList" type="text" />
+    </label>
   </body>
 </html>
 

@@ -9,11 +9,11 @@
 var emojiOn = false;
 
 chrome.browserAction.onClicked.addListener(function (tab) {
-	emojiOn = !emojiOn;
-  // Send a message to the current tab. If no response, inject script
-  checkPresence(tab.id);
-  var icon = (emojiOn) ? 'icon--on.png' : 'icon--off.png';
-  chrome.browserAction.setIcon({'path': icon});
+	// emojiOn = !emojiOn;
+ //  // Send a message to the current tab. If no response, inject script
+ //  checkPresence(tab.id);
+ //  var icon = (emojiOn) ? 'icon--on.png' : 'icon--off.png';
+ //  chrome.browserAction.setIcon({'path': icon});
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
