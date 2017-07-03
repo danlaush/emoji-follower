@@ -1,0 +1,21 @@
+{
+  "name": "Emoji Follower",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "90s mouse cursor follower with emoji",
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_title": "Emoji Follower",
+    "default_icon": "icon--off.png"
+  },
+  "permissions": [
+    "https://*/*",
+    "http://*/*",
+    "tabs"
+  ]
+}
