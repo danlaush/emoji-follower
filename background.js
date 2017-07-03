@@ -1,42 +1,50 @@
-// this is the background code...
-console.log('loaded extension');
-var init = false;
+// every time a page updates or gets opened
+// check if the script has been executed
+// if not executed
+// - check if 
+
+// can't use an init var saved at the browser scope, as injection is per page
+// have to use messaging to determine whether script has been injected in page
+
 var emojiOn = false;
-// listen for our browerAction to be clicked
+
 chrome.browserAction.onClicked.addListener(function (tab) {
-	// for the current tab, inject the "inject.js" file & execute it
-	init = true;
 	emojiOn = !emojiOn;
-	console.log('switching emojiOn to: ', emojiOn);
-	start(tab);
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-	  chrome.tabs.sendMessage(tabs[0].id, {nextStatus: emojiOn}, function(response) {
-	  	
-        
-        var icon = (emojiOn) ? 'icon--on.png' : 'icon--off.png';
-        chrome.browserAction.setIcon({'path': icon});
-	  });
-	});
-	// init = true;
-	// if(!init) {
-	// } else {
-	// }
+  // Send a message to the current tab. If no response, inject script
+  checkPresence(tab.id);
+  var icon = (emojiOn) ? 'icon--on.png' : 'icon--off.png';
+  chrome.browserAction.setIcon({'path': icon});
+});
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  if(emojiOn) {
+    console.log('active tab updated while extension on');
+    checkPresence(activeInfo.tabId);
+  } else {
+    chrome.tabs.sendMessage(activeInfo.tabId, {nextStatus: emojiOn});
+  }
 });
 
 chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
-	console.log('page changed');
-  if (changeInfo.status == 'complete') {
-
-    // do your things
-    if(init && emojiOn) {
-
-    	start(tab);
-    }
+  if(emojiOn) {
+    console.log('page updated while extension on');
+    checkPresence(tab.id);
+  } else {
+    chrome.tabs.sendMessage(tab.id, {nextStatus: emojiOn});
   }
-})
+});
 
-function start(tab) {
-	chrome.tabs.executeScript(tab.ib, {
+function checkPresence(tabId, callback) {
+  chrome.tabs.sendMessage(tabId, {nextStatus: emojiOn}, function(response) {
+    console.log('response: ',response);
+    if(response === undefined) {
+      start(tabId);
+    }
+  });
+}
+
+function start(tabId) {
+	chrome.tabs.executeScript(tabId, {
 		file: 'inject.js'
 	});
 }

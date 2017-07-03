@@ -25,25 +25,29 @@
   applyProperties(container, container.initialStyles);
   document.body.appendChild(container);
 
-  var possibleEmoji = ["🎄", "🎅", "❄️", "⛄", "🎁"]
+  var possibleEmoji = ["🎄", "🎅", "❄", "⛄", "🎁"]
   var cursor = {x: width/2, y: width/2};
   var particles = [];
 
   function init() {
-    start();
+    console.log('init emoji script, start execution');
+    startAnimation();
     chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
-        console.log(sender.tab ?
-                    "from a content script:" + sender.tab.url :
-                    "from the extension");
-        if (request.nextStatus != true) {
-          stop();
-          sendResponse({farewell: "goodbye"});
+        console.log("message from extension: ", request);
+        if (request.nextStatus == false) {
+          console.log('received message, stop execution');
+          stopAnimation();
+          sendResponse({hello: 'stop'});
+        } else {
+          console.log('received message, start execution');
+          startAnimation();
+          sendResponse({hello: 'start'});
         }
       });
   }
   
-  function start() {
+  function startAnimation() {
     bindEvents();
     loop();
   }
@@ -57,7 +61,7 @@
     window.addEventListener('resize', onWindowResize);
   }
 
-  function stop() {
+  function stopAnimation() {
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('touchmove', onTouchMove);
     document.removeEventListener('touchstart', onTouchMove);
