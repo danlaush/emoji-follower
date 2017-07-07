@@ -3,37 +3,87 @@
  This page is shown when the extension button is clicked, because the
  "browser_action" field in manifest.json contains the "default_popup" key with
  value "popup.html".
- -->
+-->
 <html>
-  <head>
-    <title>Emoji Follower Settings</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-      }
-      label {
-        display: block;
-      }
-    </style>
+<head>
+  <title>Emoji Follower Settings</title>
+  <style>
+    body {
+      font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+      font-size: 100%;
+    }
+    label {
+      display: block;
+    }
+    .onoffswitch {
+      position: relative; width: 116px;
+      -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    }
+    .onoffswitch-checkbox {
+        display: none;
+    }
+    .onoffswitch-label {
+        display: block; overflow: hidden; cursor: pointer;
+        border: 2px solid #FFFFFF; border-radius: 50px;
+    }
+    .onoffswitch-inner {
+        display: block; width: 200%; margin-left: -100%;
+        transition: margin 0.3s ease-in 0s;
+    }
+    .onoffswitch-inner:before, .onoffswitch-inner:after {
+        display: block; float: left; width: 50%; height: 41px; padding: 0; line-height: 41px;
+        font-size: 25px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+        box-sizing: border-box;
+    }
+    .onoffswitch-inner:before {
+        content: "ON";
+        padding-left: 14px;
+        background-color: #EEEEEE; color: #34A7C1;
+    }
+    .onoffswitch-inner:after {
+        content: "OFF";
+        padding-right: 14px;
+        background-color: #EEEEEE; color: #999999;
+        text-align: right;
+    }
+    .onoffswitch-switch {
+        display: block; width: 38px; margin: 1.5px;
+        background: #A1A1A1;
+        position: absolute; top: 0; bottom: 0;
+        right: 71px;
+        border: 2px solid #FFFFFF; border-radius: 50px;
+        transition: all 0.3s ease-in 0s; 
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+        margin-left: 0;
+    }
+    .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+        right: 0px; 
+        background-color: #34A7C1; 
+    }
+  </style>
 
     <!--
       - JavaScript and HTML must be in separate files: see our Content Security
       - Policy documentation[1] for details and explanation.
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
-     -->
+    -->
     <script src="popup.js"></script>
   </head>
   <body>
-    <label for="emojiOn">
-      Turn emoji on
-      <input id="emojiOn" type="checkbox" />
-    </label>
+    Turn emoji on
+    <div class="onoffswitch">
+        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="emojiOn">
+        <label class="onoffswitch-label" for="emojiOn">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+        </label>
+    </div>
     <label for="emojiList">
       Emoji to use
       <input id="emojiList" type="text" />
     </label>
   </body>
-</html>
+  </html>
 

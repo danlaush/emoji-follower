@@ -7,14 +7,31 @@
 // have to use messaging to determine whether script has been injected in page
 
 var emojiOn = false;
+localStorage.setItem('emojiOn', JSON.stringify(false));
 
-chrome.browserAction.onClicked.addListener(function (tab) {
-	// emojiOn = !emojiOn;
- //  // Send a message to the current tab. If no response, inject script
- //  checkPresence(tab.id);
- //  var icon = (emojiOn) ? 'icon--on.png' : 'icon--off.png';
- //  chrome.browserAction.setIcon({'path': icon});
+chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
+  if(message.nextEmojiStatus)
+  console.log(message.nextEmojiStatus);
+  emojiOn = message.nextEmojiStatus;
+  var icon = (emojiOn) ? 'icon--on.png' : 'icon--off.png';
+  chrome.browserAction.setIcon({'path': icon});
+
+  chrome.tabs.query({active:true},function(tabs){
+
+    if(tabs.length === 0) {
+      console.log('no active tabs');
+      return;
+    }
+    console.log('got the active tab: ', tabs[0].id);
+    
+    checkPresence(tabs[0].id);
+  });        
 });
+
+// chrome.browserAction.onClicked.addListener(function (tab) {
+// 	emojiOn = !emojiOn;
+//   // Send a message to the current tab. If no response, inject script
+// });
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   if(emojiOn) {
@@ -34,16 +51,21 @@ chrome.tabs.onUpdated.addListener( function (tabId, changeInfo, tab) {
   }
 });
 
-function checkPresence(tabId, callback) {
+function checkPresence(tabId) {
+  console.log('check for script');
   chrome.tabs.sendMessage(tabId, {nextStatus: emojiOn}, function(response) {
     console.log('response: ',response);
     if(response === undefined) {
+      console.log('no script found, running injection')
       start(tabId);
+    } else {
+      console.log('found a script already');
     }
   });
 }
 
 function start(tabId) {
+  console.log('injecting to tab', tabId);
 	chrome.tabs.executeScript(tabId, {
 		file: 'inject.js'
 	});
